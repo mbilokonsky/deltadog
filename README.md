@@ -15,8 +15,8 @@ Then take a look at `example.js`, which models the same art market with the same
 This is so far just a toy implementation, mostly, though it already exposes some tremendous power.
 
 Subsequent work should happen around the following tasks sooner than later:
-  1. True immutability in the store, rather than the janky freeze/clone stuff I'm doing.
-  2. Types would be great and would really help make this code more readable. Super excited to try to convert this to TS.
+  1. A delta store, in-memory by default but persistent if necessary, where deltas can be appended and read-back in an immutable way. (I'm doing some goofy faux-immutability in core.js)
+  2. Types would be great and would really help make this code more readable. Super excited to add typescript.
   3. We need the ability to append negations - this is straightforward, there's a new kind of relationship that can negate a previous relationship (and optionally replace it by pointing to a new one!). The integration logic could then seamlessly handle filters and redirects around this.
   4. This is really chaotic code to work in without a good set of utility functions to help you generate your deltas and another set to help you perform queries and format them. I wrote some basic utility functions, but all of this needs to be formalized and tested and new utility functions should be easy enough to spin out.
   5. All of these obvs needs some refactoring love. :)
