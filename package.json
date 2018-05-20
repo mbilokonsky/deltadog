@@ -1,8 +1,8 @@
 {
-  "name": "delta_dog_writeup",
+  "name": "delta-dog",
   "version": "1.0.0",
-  "description": "Documentation and example code for managing state over time.",
-  "main": "example1.js",
+  "description": "a tool for tracking changes to the state of a given system.",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
