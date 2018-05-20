@@ -1,0 +1,14 @@
+{
+  "name": "delta_dog_writeup",
+  "version": "1.0.0",
+  "description": "Documentation and example code for managing state over time.",
+  "main": "example1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "uuid": "^3.2.1"
+  }
+}
