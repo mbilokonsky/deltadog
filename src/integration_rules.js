@@ -20,7 +20,8 @@ const defaultFlattener = (parent, property, deltas, formatID) => deltas.reduce(
 const defaultReconciler = {
   getFlattener: (parent, property) => ({
     flatten: defaultFlattener.bind(null, parent, property)
-  })
+  }),
+  getPostFlattener: () => flat => flat
 }
 
 module.exports = {
@@ -36,6 +37,16 @@ module.exports = {
         return flattener.flatten(deltas, formatID); 
     }
 
-    return { formatID, flattenDeltasForProperty }
+    const postFlattenTransform = flat => {
+      let transform;
+      if (reconciler.getPostFlattener) {
+        transform = reconciler.getPostFlattener();
+      } else {
+        transform = defaultReconciler.getPostFlattener();
+      } 
+      return transform(flat);
+    }
+
+    return { formatID, flattenDeltasForProperty, postFlattenTransform }
   }
 };

@@ -343,3 +343,122 @@ const back_to_the_future = {
 }
 
 log('gallery + collector, with time travel', back_to_the_future);
+
+// Ok so we've been focusing on collectors and galleries so far, but given the state of our system as described by `stream`
+// what do we know about our paintings?
+
+const monalisa = DD.integrate(universe.painting1, stream);
+const flat_mona = DD.flatten(monalisa, rules_4);
+
+log('mona after sale', flat_mona);
+
+// So that's weird, we have a name and a `transactions` property but we don't have, like, an owner, or a price history, exactly.
+// Can we write some flattening rules to build out the view that we want, given this underlying data?
+
+const reconciler4 = {
+    getFlattener: (parent, property) => {
+        if (property === guids.properties.names) {
+            return { flatten: flattenToMostRecentName.bind(null, parent, property) };
+        }
+
+        if (property === guids.properties.money) {
+            return { flatten: flattenMoneyBalance.bind(null, parent, property) };
+        }   
+        
+        if (property === guids.properties.collection) {
+            return { flatten: flattenArtCollection.bind(null, parent, property) };
+        }
+
+        if (property === guids.properties.transactions) {
+            return { flatten: flattenTransactions.bind(null, parent, property) };
+        }
+    }
+}
+
+const flattenTransactions = (parent, property, deltas, formatID) => 
+    deltas.reduce(get_transaction_flattener(parent, formatID), []);
+
+const get_transaction_flattener = (parent, formatID) => {
+    return (acc, delta) => {
+        // so, we're now going to be iterating over all deltas that target the 
+        // 'collection' property on any given entity. 
+
+        // so far we have two different kinds of deltas that reference art ownership,
+        // `createOwnershipRelationship` and `createSaleRelationship` - but both use 
+        // the `pointers.buyer` to reference ownership, so we should be able to generalize
+        // a single flattening reduction
+
+        // what is the piece of art whose ownership is transitioning?
+        const commodity = delta.pointers[guids.pointers.commodity].target;
+        const formatted_commodity = formatID(commodity);
+
+        // who is the new owner?
+        const new_owner = delta.pointers[guids.pointers.buyer].target;
+        const formatted_owner = formatID(new_owner);
+
+        // who is the old owner?
+        const old_owner = delta.pointers[guids.pointers.seller];
+        const formatted_seller = old_owner ? formatID(old_owner.target) : '<nobody>'
+
+        const money_amount = delta.pointers[guids.pointers.money_amount];
+        const price = money_amount ? money_amount.target : 0;
+
+        const tx = {
+            buyer: formatted_owner,
+            seller: formatted_seller,
+            price,
+            timestamp: delta.timestamp,
+            id: delta.id,
+        }
+
+        acc.push(tx);
+        return acc;        
+    }
+}
+
+const rules_5 = DD.createRulesEngine({
+    namesByGuid,
+    reconciler: reconciler4
+});
+
+const flat_mona_with_tx = DD.flatten(monalisa, rules_5);
+
+log('mona with tx history', flat_mona_with_tx);
+
+// This is neat! Can we do one better, though? I see that transaction history but I'd love, for instance, to have some other fields derived from our transaction log.
+// Let's use a post-flattening function to do one final transform to our materialized view.
+
+const painting_post_flattener = painting => {
+    if (!painting.transactions) { return painting; }
+    painting.max_price = painting.transactions.reduce((acc, val) => {
+        return Math.max(acc, val.price)
+    }, Number.MIN_SAFE_INTEGER);
+
+    painting.min_price = painting.transactions.reduce((acc, val) => {
+        return Math.min(acc, val.price);
+    }, Number.MAX_SAFE_INTEGER);
+
+    painting.average_price = painting.transactions.reduce((acc, val, index, collection) => {
+        const total = acc + val.price;
+        if (index === collection.length - 1) { return total / collection.length } // compute the mean
+        
+        return total;
+    }, 0);
+
+    delete painting.transactions;
+
+    return painting;
+}
+
+const reconciler5 = {
+    getFlattener: reconciler4.getFlattener,
+    getPostFlattener: () => painting_post_flattener
+}
+
+const rules_6 = DD.createRulesEngine({
+    namesByGuid,
+    reconciler: reconciler5
+});
+
+const bonus_mona = DD.flatten(monalisa, rules_6);
+log('mona with derived fields', bonus_mona);

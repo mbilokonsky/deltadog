@@ -30,14 +30,14 @@ const reducer = (env, delta) => {
 
 const integrate = (root, deltas) => deltas.reduce(reducer, { [root.id]: clone(root)})[root.id];
 
-const flatten = (parent, rules = default_rules) => Object
+const flatten = (parent, rules = default_rules) => rules.postFlattenTransform(Object
     .entries(parent.properties)
     .reduce((flat, [property_id, deltas]) => {
         const property_name = rules.formatID(property_id);
         const property_value = rules.flattenDeltasForProperty(parent, property_id, deltas);
         flat[property_name] = property_value;
         return flat;
-    }, {});
+    }, {}));
 
 module.exports = {
     integrate,

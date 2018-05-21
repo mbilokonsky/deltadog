@@ -40,10 +40,11 @@ const createOwnershipRelationship = (owner, object, opts) => createDelta({
     ...opts,
     pointers: {
         [pointers.buyer]: createPointer(owner, properties.collection),
-        [pointers.commodity]: createPointer(object, properties.owner)
+        [pointers.commodity]: createPointer(object, properties.transactions)
     }
 })
 
+// hmm, ideally we should be able to compose `createMoneyAssignment` and `createOwnershipRelationship` to dynamically generate this function?
 const createSaleRelationship = (buyer, seller, commodity, price, opts) => createDelta({
     ...opts,
     pointers: {
