@@ -9,6 +9,13 @@ Take a look at `pre-DD.js` for a starting point. This file contains a model of t
 
 Then take a look at `example.js`, which models the same art market with the same domain objects but which captures every state transition. This enables declatative, _relational_ updates to the entire system at once. It also enables arbitrary read-time formatting and, in case that wasn't enough, the ability to perform temporal queries (e.g. 'run this same query but pretend you were running at at time t1 instead of t2').
 
+## Key Features
+  1. Universal schema. All data that flows into Delta Dog looks exactly the same: it's just a stream of deltas, each of which has an identical schema.
+  2. Idempotent functional transparent immutable pure etc: this implementation is pure functions and pure data structures.
+  3. Arbitrary read-time complexity with minimal up-front cost: just inhale the changes into your system. Worry about what they mean later. Because DeltaDog is using a referentially transparent universal schema as expressed in deltas, every query returns a substream of deltas that can be organized into whatever shape you want _at query time_.
+  4. This query-time complexity offers maximally granular control over what you get back out of the store. Your query can specify a filter operation to take place over the entire universe of deltas, so for instance you can trivially filter out `all deltas whose timestamp is > t1` or `all deltas created by Orta` (if we're tracking that in our metadata). The resulting substream can be piped into your query post-processing to coerce it into whatever shape you want.
+  5. Deltas are technically 'hyper-edges' in an n-dimensional hyper-graph. (A hyper-graph is a graph whose hyper-edges are also nodes.) When we perform a query, we're saying 'return the graph starting with node X and follow all of the edges as I've instructed in my query.' This is neat because it means we get a lot of powerful graph analysis for free. (Graph theory is a well-defined discipline with lots of ways of exploring state; the ability to articulate state-over-time as a graph of changes means we can do really gnarly analyses that would just not be possible with standard BI tools.)
+
 ## Questions
 I've been showing this to a few folks internally and here I want to collect up the various questions I've been asked by stakeholders:
 
