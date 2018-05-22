@@ -54,5 +54,5 @@ console.log('state1', universe);
 // so that's my starting point. This is kind of what y'all do today, right? 
 // This is how a lot of software works.
 // but what if it could work a little differently? 
-// Take a look at test2.js to see this exact same state + transition modeled using DeltaDog.
+// Take a look at example.js to see this exact same state + transition modeled using DeltaDog.
 
