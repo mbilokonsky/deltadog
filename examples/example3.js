@@ -1,8 +1,9 @@
+console.log("DeltaDog Demo - Example 3 - Temporal Lensing");
 // This example is almost identical to the previous one, but it involves a temporal predicate.
 
 const gql = require("graphql-tag").default;
 const DD = require("../src");
-const { pointers, properties } = DD.guids;
+const { pointers } = DD.guids;
 const { predicates, readers } = DD.utils;
 const initial_state = require("./__init");
 

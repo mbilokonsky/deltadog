@@ -1,3 +1,5 @@
+console.log("DeltaDog Demo - Example 1 - Shallow View Over Delta Space");
+
 const gql = require("graphql-tag").default;
 const DD = require("../src");
 

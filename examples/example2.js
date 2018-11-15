@@ -1,3 +1,4 @@
+console.log("DeltaDog Demo - Example 2 - Custom Lensing Over Delta Space");
 // This example shows how we can define custom schemas and resolvers to coerce the data into whatever form we want.
 
 const gql = require("graphql-tag").default;
