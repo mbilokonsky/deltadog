@@ -1,68 +1,78 @@
-const {properties, pointers} = require('./guids');
-const UUID = require('uuid');
+const { properties, pointers } = require("./guids");
+const UUID = require("uuid");
 
-const createPointer = (target, property) => ({ target: target.id || target, property });
+const createPointer = (pointer, target, property) => ({
+  id: pointer,
+  target: target.id || target,
+  property
+});
 
-const createDelta = (opts) => Object.freeze({
-    id: UUID.v4(),
-    timestamp: opts.timestamp || Date.now(),
-    pointers: Object.freeze(opts.pointers || {}),
+const createDelta = opts =>
+  Object.freeze({
+    id: UUID.v4().toString(),
+    timestamp: opts.timestamp || new Date().toISOString(),
+    pointers: Object.freeze(opts.pointers || []),
     properties: {},
-    $debug: Object.freeze(opts.$debug || ''),
+    $debug: Object.freeze(opts.$debug || ""),
     $tags: Object.freeze(opts.$tags || [])
-});
+  });
 
-const createNameRelationship = (ref, name, opts) => createDelta({
-    ...opts,        
-    pointers: {
-        [pointers.name]: createPointer(name, properties.things_with_this_name),
-        [pointers.named]: createPointer(ref, properties.names)
-    } 
-})
-
-const createContainmentRelationship = (parent, child, opts) => createDelta({
+const createNameRelationship = (ref, name, opts) =>
+  createDelta({
     ...opts,
-    pointers: {
-        [pointers.parent]: createPointer(parent, properties.children),
-        [pointers.child]: createPointer(child, properties.parents)
-    }
-});
+    pointers: [
+      createPointer(pointers.name, name, properties.things_with_this_name),
+      createPointer(pointers.named, ref, properties.names)
+    ]
+  });
 
-const createMoneyAssignment = (entity, amount, opts) => createDelta({
+const createContainmentRelationship = (parent, child, opts) =>
+  createDelta({
     ...opts,
-    pointers: {
-        [pointers.money_target]: createPointer(entity, properties.money),
-        [pointers.money_amount]: createPointer(amount, properties.NULL)
-    }
-})
+    pointers: [
+      createPointer(pointers.parent, parent, properties.children),
+      createPointer(pointers.child, child, properties.parents)
+    ]
+  });
 
-const createOwnershipRelationship = (owner, object, opts) => createDelta({
+const createMoneyAssignment = (entity, amount, opts) =>
+  createDelta({
     ...opts,
-    pointers: {
-        [pointers.buyer]: createPointer(owner, properties.collection),
-        [pointers.commodity]: createPointer(object, properties.transactions)
-    }
-})
+    pointers: [
+      createPointer(pointers.money_target, entity, properties.money),
+      createPointer(pointers.money_amount, amount, properties.NULL)
+    ]
+  });
+
+const createOwnershipRelationship = (owner, object, opts) =>
+  createDelta({
+    ...opts,
+    pointers: [
+      createPointer(pointers.buyer, owner, properties.collection),
+      createPointer(pointers.commodity, object, properties.transactions)
+    ]
+  });
 
 // hmm, ideally we should be able to compose `createMoneyAssignment` and `createOwnershipRelationship` to dynamically generate this function?
-const createSaleRelationship = (buyer, seller, commodity, price, opts) => createDelta({
+const createSaleRelationship = (buyer, seller, commodity, price, opts) =>
+  createDelta({
     ...opts,
-    pointers: {
-        [pointers.money_amount]: createPointer(price, properties.NULL),
-        [pointers.money_target]: createPointer(seller, properties.money),
-        [pointers.money_source]: createPointer(buyer, properties.money),
+    pointers: [
+      createPointer(pointers.money_amount, price, properties.NULL),
+      createPointer(pointers.money_target, seller, properties.money),
+      createPointer(pointers.money_source, buyer, properties.money),
 
-        [pointers.commodity]: createPointer(commodity, properties.transactions),
-        [pointers.buyer]: createPointer(buyer, properties.collection),
-        [pointers.seller]: createPointer(seller, properties.collection),        
-    }
-})
+      createPointer(pointers.commodity, commodity, properties.transactions),
+      createPointer(pointers.buyer, buyer, properties.collection),
+      createPointer(pointers.seller, seller, properties.collection)
+    ]
+  });
 
 module.exports = {
-    createDelta,
-    createNameRelationship,
-    createContainmentRelationship,
-    createMoneyAssignment,
-    createOwnershipRelationship,
-    createSaleRelationship
-}
+  createDelta,
+  createNameRelationship,
+  createContainmentRelationship,
+  createMoneyAssignment,
+  createOwnershipRelationship,
+  createSaleRelationship
+};
