@@ -4,10 +4,10 @@ const gql = require("graphql-tag").default;
 const DD = require("../src");
 
 // all of our examples will start with the same initial conditions
-const by_guid = require("./__init").by_guid;
+const { universe } = require("./__init")
 
 // let's create a simple deltastore with default schema information
-const deltaStore = DD.createStore(by_guid);
+const deltaStore = DD.createStore(universe);
 
 // let's query out each of our nodes, as well as its pointers.
 const query = gql`
@@ -24,4 +24,4 @@ const query = gql`
   }
 `;
 
-deltaStore.query({ query }).then(result => console.dir(result.data));
+deltaStore.query({ query }).then(result => console.dir(result.data.shallow_nodes));

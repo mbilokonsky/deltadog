@@ -1,15 +1,14 @@
 const GraphQLDateTime = require("graphql-iso-date").GraphQLDateTime;
-const { predicates } = require("../utils");
 
 module.exports = {
-  initialize: (store, custom_resolvers) => ({
+  initialize: (universe, custom_resolvers) => ({
     DateTime: GraphQLDateTime,
     Query: {
       shallow_nodes: _ => {
-        return Object.values(store);
+        return universe.dump();
       },
-      shallow_node: id => store[id],
-      ...custom_resolvers(store)
+      shallow_node: id => universe.lookup_by_id(id),
+      ...custom_resolvers(universe)
     }
   })
 };

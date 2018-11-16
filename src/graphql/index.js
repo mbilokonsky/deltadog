@@ -10,12 +10,12 @@ const cache = new InMemoryCache();
 
 module.exports = {
   initialize: (
-    data,
+    universe,
     typedef_customizations = { types: "", queries: "" },
     resolver_customizations = _ => {}
   ) => {
     const typeDefs = initialize_typedefs(typedef_customizations);
-    const resolvers = initialize_resolvers(data, resolver_customizations);
+    const resolvers = initialize_resolvers(universe, resolver_customizations);
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers

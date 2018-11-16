@@ -3,12 +3,10 @@ console.log("DeltaDog Demo - Example 2 - Custom Lensing Over Delta Space");
 
 const gql = require("graphql-tag").default;
 const DD = require("../src");
-const { pointers, properties } = DD.guids;
-const { predicates, readers } = DD.utils;
-const initial_state = require("./__init");
+const { pointers } = DD.guids;
+const { predicates } = DD.utils;
+const { universe } = require("./__init")
 
-// all of our examples will start with the same initial conditions
-const by_guid = initial_state.by_guid;
 
 // let's define some custom types and resolvers, just to show how this can work:
 const custom_typedefs = {
@@ -48,22 +46,26 @@ const deduplicator = (acc, val, index, src) => {
   return acc;
 };
 
-const format = store => ({ painting_id, owner_id }) => ({
-  id: painting_id,
-  title: readers.getName(store)(painting_id) || "untitled",
-  currently_owned_by: readers.getName(store)(owner_id)
-});
+const format = universe => ({ painting_id, owner_id }) => {
+  const titles = universe.lookup_names_from_id(painting_id)
+  const owner_names = universe.lookup_names_from_id(owner_id)
+  return {
+    id: painting_id,
+    title: titles ? titles[0] : "untitled",
+    currently_owned_by: owner_names ? owner_names[0] : 'secret rando'
+  }
+};
 
-const custom_resolvers = store => ({
+const custom_resolvers = universe => ({
   paintings: _ =>
-    Object.values(store) // all deltas
+    universe.dump() // all deltas
       .filter(predicates.setsOwnership) // only those deltas that set ownership
       .map(getPaintingData) // returns { painting_id, owner_id }
       .reduce(deduplicator, {}) // lol @ performance here
-      .map(format(store))
+      .map(format(universe))
 });
 
-const deltaStore = DD.createStore(by_guid, custom_typedefs, custom_resolvers);
+const deltaStore = DD.createStore(universe, custom_typedefs, custom_resolvers);
 
 const query = gql`
   query {
