@@ -4,7 +4,7 @@
   "description": "a tool for tracking changes to the state of a given system.",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "ex1": "node examples/example1.js",
     "ex2": "node examples/example2.js",
     "ex3": "node examples/example3.js"

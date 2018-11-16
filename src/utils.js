@@ -9,6 +9,7 @@ const targetsEntity = targetId => entity =>
 
 const setsOwnership = hasPointer(pointers.commodity);
 const setsName = hasPointer(pointers.name);
+const setsMoney = hasPointer(pointers.money_amount)
 
 const isBefore = timestamp => entity =>
   new Date(entity.timestamp) < new Date(timestamp);
@@ -19,6 +20,7 @@ module.exports = {
     setsOwnership,
     setsName,
     targetsEntity,
-    isBefore
+    isBefore,
+    setsMoney
   }
 };

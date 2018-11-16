@@ -82,5 +82,6 @@ universe.appendDeltas(all_deltas)
 
 module.exports = {
   universe,
-  time: { t1, t2, advanceTimestamp }
+  time: { t1, t2, advanceTimestamp },
+  domain
 };
