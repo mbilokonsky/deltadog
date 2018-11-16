@@ -166,8 +166,16 @@ populate_transaction_history();
 deltaStore
   .query({ query })
   .then(result => {
-    results = result.data.paintings.map(p => `Painting [${p.title}] is owned by ${p.owner.name} ($${p.owner.balance})`)
+    // graphQL
+    console.log('\nPainting State:')
+    results = result.data.paintings.map(p => `   Painting [${p.title}] is owned by ${p.owner.name} ($${p.owner.balance})`)
     console.log(results.join('\n'))
+    
+    // universe lookup
+    console.log('\nCollector State')
+    console.log(`   Gallery: `, universe.lookup('balance_by_collector', domain.gallery.id))
+    console.log(`   Sally Smith: `, universe.lookup('balance_by_collector', domain.collector1.id))
+    console.log(`   Judas Jones: `, universe.lookup('balance_by_collector', domain.collector2.id))
   });
 
 
