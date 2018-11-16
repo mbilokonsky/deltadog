@@ -16,6 +16,8 @@
     "graphql-iso-date": "^3.6.1",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
+    "jest": "^23.6.0",
+    "lodash": "^4.17.11",
     "uuid": "^3.2.1"
   }
 }

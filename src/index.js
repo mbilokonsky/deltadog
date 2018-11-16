@@ -15,5 +15,6 @@ module.exports = {
   createRulesEngine: rules_util.createRulesEngine,
   createStore: store.initialize,
   guids: require("./guids"),
+  universe: require('./universe'),
   utils: require("./utils")
 };
