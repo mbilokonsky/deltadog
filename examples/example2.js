@@ -65,7 +65,7 @@ const custom_resolvers = universe => ({
       .map(format(universe))
 });
 
-const deltaStore = DD.createStore(universe, custom_typedefs, custom_resolvers);
+const deltaStore = DD.createGraphQLStore(universe, custom_typedefs, custom_resolvers);
 
 const query = gql`
   query {
@@ -78,6 +78,7 @@ const query = gql`
 `;
 
 deltaStore.query({ query }).then(result => {
-  console.log("Here's the current state of our system:");
-  console.dir(result.data.paintings);
+  console.log('Here are our paintings as they exist now, when t > t2:')
+  results = result.data.paintings.map(p => `Painting [${p.title}] is owned by ${p.currently_owned_by}`)
+  console.log(results.join('\n'))
 });

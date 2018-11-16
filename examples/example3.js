@@ -67,17 +67,7 @@ const custom_resolvers = universe => ({
   }
 });
 
-const deltaStore = DD.createStore(universe, custom_typedefs, custom_resolvers);
-
-const query = gql`
-  query {
-    paintings {
-      id
-      title
-      currently_owned_by
-    }
-  }
-`;
+const deltaStore = DD.createGraphQLStore(universe, custom_typedefs, custom_resolvers);
 
 const last_timestamp = new Date(time.t2);
 const cutoff = new Date(
@@ -85,7 +75,7 @@ const cutoff = new Date(
 ).toISOString();
 
 // But, we can time travel! Let's do the same query with a cutoff:
-const query2 = gql`
+const query = gql`
   query($cutoff: DateTime) {
     paintings(cutoff: $cutoff) {
       id
@@ -97,10 +87,11 @@ const query2 = gql`
 
 deltaStore
   .query({
-    query: query2,
+    query,
     variables: { cutoff }
   })
   .then(result => {
-    console.log('Here are our paintings as they existed before t2')
-    console.dir(result.data.paintings)
+    console.log('Here are our paintings as they existed before time = t2:')
+    results = result.data.paintings.map(p => `Painting [${p.title}] is owned by ${p.currently_owned_by}`)
+    console.log(results.join('\n'))
   });

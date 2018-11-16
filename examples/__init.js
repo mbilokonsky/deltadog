@@ -76,6 +76,8 @@ const all_deltas = [
   domain.collector2
 ].concat(initial_state, after_one_sale);
 
+// slurp them up into our universe
+// this will build all of our indexes etc
 universe.appendDeltas(all_deltas)
 
 module.exports = {

@@ -12,9 +12,7 @@ const delta = opts =>
     id: UUID.v4().toString(),
     timestamp: opts.timestamp || new Date().toISOString(),
     pointers: Object.freeze(opts.pointers || []),
-    properties: {},
-    $debug: Object.freeze(opts.$debug || ""),
-    $tags: Object.freeze(opts.$tags || [])
+    properties: {}
   });
 
 const nameRelationship = (ref, name, opts) =>

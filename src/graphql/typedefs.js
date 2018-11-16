@@ -4,6 +4,7 @@ module.exports = {
   initialize: custom_defs => gql`
 
       scalar DateTime
+      
 
       type ShallowNode {
         id: String!
@@ -13,7 +14,7 @@ module.exports = {
 
       type ShallowPointer {
         id: String!
-        target: ShallowNode!
+        target: String!       #todo - this should be string or int or float or bool or any scalar
         property: String!
       }
       
