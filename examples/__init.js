@@ -1,11 +1,11 @@
 // @ts-check
 const { 
-  createDelta, 
-  createSaleRelationship, 
-  createNameRelationship, 
-  createMoneyAssignment, 
-  createOwnershipRelationship
-} = require("../src");
+  delta, 
+  saleRelationship, 
+  nameRelationship, 
+  moneyAssignment, 
+  ownershipRelationship
+} = require("../src").create;
 
 const universe = require('../src/universe').createUniverse();
 
@@ -23,40 +23,40 @@ const t1 = advanceTimestamp()
 
 // first, let's create some deltas to represent the nouns in our world
 const domain = {
-  painting1: createDelta({ $debug: "mona lisa", timestamp }),
-  painting2: createDelta({ $debug: "the scream", timestamp }),
-  gallery: createDelta({ $debug: "gallery", timestamp }),
-  collector1: createDelta({ $debug: "collector1", timestamp }),
-  collector2: createDelta({ $debug: "collector2", timestamp })
+  painting1: delta({ $debug: "mona lisa", timestamp }),
+  painting2: delta({ $debug: "the scream", timestamp }),
+  gallery: delta({ $debug: "gallery", timestamp }),
+  collector1: delta({ $debug: "collector1", timestamp }),
+  collector2: delta({ $debug: "collector2", timestamp })
 };
 
 // now let's assign some properties to the members of our domain
 const initial_state = [
   // assign names to paintings, collectors and the gallery
-  createNameRelationship(domain.painting1, "mona lisa", { timestamp }),
-  createNameRelationship(domain.painting2, "the scream", { timestamp }),
-  createNameRelationship(
+  nameRelationship(domain.painting1, "mona lisa", { timestamp }),
+  nameRelationship(domain.painting2, "the scream", { timestamp }),
+  nameRelationship(
     domain.gallery,
     "Suspiciously Well Stocked Gallery",
     { timestamp }
   ),
-  createNameRelationship(domain.collector1, "Sally Smith", { timestamp }),
-  createNameRelationship(domain.collector2, "Judas Jones", { timestamp }),
+  nameRelationship(domain.collector1, "Sally Smith", { timestamp }),
+  nameRelationship(domain.collector2, "Judas Jones", { timestamp }),
 
   // establish ownership over the two paintings
-  createOwnershipRelationship(domain.gallery, domain.painting1, { timestamp }),
-  createOwnershipRelationship(domain.gallery, domain.painting2, { timestamp }),
+  ownershipRelationship(domain.gallery, domain.painting1, { timestamp }),
+  ownershipRelationship(domain.gallery, domain.painting2, { timestamp }),
 
   // set a bank balance for each stakeholder.
-  createMoneyAssignment(domain.gallery, 1000, { timestamp }),
-  createMoneyAssignment(domain.collector1, 500, { timestamp }),
-  createMoneyAssignment(domain.collector2, 2000, { timestamp })
+  moneyAssignment(domain.gallery, 1000, { timestamp }),
+  moneyAssignment(domain.collector1, 500, { timestamp }),
+  moneyAssignment(domain.collector2, 2000, { timestamp })
 ];
 
 const t2 = advanceTimestamp();
 // So that's cool! What does that let us do? Well, let's sell a painting.
 const after_one_sale = [
-  createSaleRelationship(
+  saleRelationship(
     domain.collector1.id,
     domain.gallery.id,
     domain.painting1.id,

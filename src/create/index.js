@@ -1,4 +1,4 @@
-const { properties, pointers } = require("./guids");
+const { properties, pointers } = require("../guids");
 const UUID = require("uuid");
 
 const createPointer = (pointer, target, property) => ({
@@ -7,7 +7,7 @@ const createPointer = (pointer, target, property) => ({
   property
 });
 
-const createDelta = opts =>
+const delta = opts =>
   Object.freeze({
     id: UUID.v4().toString(),
     timestamp: opts.timestamp || new Date().toISOString(),
@@ -17,8 +17,8 @@ const createDelta = opts =>
     $tags: Object.freeze(opts.$tags || [])
   });
 
-const createNameRelationship = (ref, name, opts) =>
-  createDelta({
+const nameRelationship = (ref, name, opts) =>
+  delta({
     ...opts,
     pointers: [
       createPointer(pointers.name, name, properties.things_with_this_name),
@@ -26,8 +26,8 @@ const createNameRelationship = (ref, name, opts) =>
     ]
   });
 
-const createContainmentRelationship = (parent, child, opts) =>
-  createDelta({
+const containmentRelationship = (parent, child, opts) =>
+  delta({
     ...opts,
     pointers: [
       createPointer(pointers.parent, parent, properties.children),
@@ -35,8 +35,8 @@ const createContainmentRelationship = (parent, child, opts) =>
     ]
   });
 
-const createMoneyAssignment = (entity, amount, opts) =>
-  createDelta({
+const moneyAssignment = (entity, amount, opts) =>
+  delta({
     ...opts,
     pointers: [
       createPointer(pointers.money_target, entity, properties.money),
@@ -44,8 +44,8 @@ const createMoneyAssignment = (entity, amount, opts) =>
     ]
   });
 
-const createOwnershipRelationship = (owner, object, opts) =>
-  createDelta({
+const ownershipRelationship = (owner, object, opts) =>
+  delta({
     ...opts,
     pointers: [
       createPointer(pointers.buyer, owner, properties.collection),
@@ -54,8 +54,8 @@ const createOwnershipRelationship = (owner, object, opts) =>
   });
 
 // hmm, ideally we should be able to compose `createMoneyAssignment` and `createOwnershipRelationship` to dynamically generate this function?
-const createSaleRelationship = (buyer, seller, commodity, price, opts) =>
-  createDelta({
+const saleRelationship = (buyer, seller, commodity, price, opts) =>
+  delta({
     ...opts,
     pointers: [
       createPointer(pointers.money_amount, price, properties.NULL),
@@ -69,10 +69,10 @@ const createSaleRelationship = (buyer, seller, commodity, price, opts) =>
   });
 
 module.exports = {
-  createDelta,
-  createNameRelationship,
-  createContainmentRelationship,
-  createMoneyAssignment,
-  createOwnershipRelationship,
-  createSaleRelationship
+  delta,
+  nameRelationship,
+  containmentRelationship,
+  moneyAssignment,
+  ownershipRelationship,
+  saleRelationship
 };
