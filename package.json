@@ -7,7 +7,9 @@
     "test": "jest",
     "ex1": "node examples/example1.js",
     "ex2": "node examples/example2.js",
-    "ex3": "node examples/example3.js"
+    "ex3": "node examples/example3.js",
+    "ex4": "node examples/example4.js",
+    "ex5": "node examples/example5.js"
   },
   "author": "",
   "license": "ISC",
