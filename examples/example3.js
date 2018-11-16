@@ -5,7 +5,7 @@ const gql = require("graphql-tag").default;
 const DD = require("../src");
 const { pointers } = DD.guids;
 const { predicates } = DD.utils;
-const { universe, timestamps } = require("./__init");
+const { universe, time } = require("./__init");
 
 // let's define some custom types and resolvers, just to show how this can work:
 const custom_typedefs = {
@@ -79,7 +79,7 @@ const query = gql`
   }
 `;
 
-const last_timestamp = new Date(timestamps.t2);
+const last_timestamp = new Date(time.t2);
 const cutoff = new Date(
   last_timestamp.setHours(last_timestamp.getHours() - 1)
 ).toISOString();
@@ -100,4 +100,7 @@ deltaStore
     query: query2,
     variables: { cutoff }
   })
-  .then(result => console.dir(result.data));
+  .then(result => {
+    console.log('Here are our paintings as they existed before t2')
+    console.dir(result.data.paintings)
+  });

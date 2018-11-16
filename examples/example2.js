@@ -79,5 +79,5 @@ const query = gql`
 
 deltaStore.query({ query }).then(result => {
   console.log("Here's the current state of our system:");
-  console.dir(result.data);
+  console.dir(result.data.paintings);
 });

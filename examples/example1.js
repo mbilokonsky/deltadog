@@ -24,4 +24,8 @@ const query = gql`
   }
 `;
 
-deltaStore.query({ query }).then(result => console.dir(result.data.shallow_nodes));
+deltaStore.query({ query }).then(result => {
+  console.log("Here's the current state of our system:");
+  console.log('(you are seeing a lossless relational view, this is weird)')
+  console.dir(result.data.shallow_nodes)
+});
