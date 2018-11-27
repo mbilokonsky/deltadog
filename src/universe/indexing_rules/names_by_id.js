@@ -1,10 +1,10 @@
 const utils = require('../../utils')
-const { properties } = require("../../guids");
+const { pointers, properties } = require("../../guids");
 const _ = require('lodash')
 
 const getNameAndId = delta => {
-  let id = _.find(delta.pointers, v => v.property === properties.names).target
-  let name = _.find(delta.pointers, v => v.property === properties.things_with_this_name).target
+  let id = delta.pointers[pointers.named].target
+  let name = delta.pointers[pointers.name].target
   return { name, id }
 }
 

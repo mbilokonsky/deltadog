@@ -4,21 +4,21 @@ describe('universe secondary index ids by name', () => {
   let canon, index;
   beforeEach(() => {
     canon = [
-      { id: 'a', pointers: [] }, // will have one name
-      { id: 'b', pointers: [] }, // will have two names
-      { id: 'c', pointers: [] }, // will have no names
-      { id: 'x', pointers: [      // this assigns the name 'foo' to the entity with the id 'a'
-        { id: guids.pointers.name, target: 'foo', property: guids.properties.things_with_this_name },
-        { id: guids.pointers.named, target: 'a', property: guids.properties.names }
-      ]},
-      { id: 'y', pointers: [      // this assigns the name 'foo' to the entity with the id 'b'
-        { id: guids.pointers.name, target: 'foo', property: guids.properties.things_with_this_name },
-        { id: guids.pointers.named, target: 'b', property: guids.properties.names }
-      ]},
-      { id: 'z', pointers: [      // this assigns the name 'bar' to the entity with the id 'b'
-        { id: guids.pointers.name, target: 'bar', property: guids.properties.things_with_this_name },
-        { id: guids.pointers.named, target: 'b', property: guids.properties.names }
-      ]}
+      { id: 'a', pointers: {} }, // will have one name
+      { id: 'b', pointers: {} }, // will have two names
+      { id: 'c', pointers: {} }, // will have no names
+      { id: 'x', pointers: {      // this assigns the name 'foo' to the entity with the id 'a'
+        [guids.pointers.name]: {target: 'foo', property: guids.properties.things_with_this_name },
+        [guids.pointers.named]: {target: 'a', property: guids.properties.names }
+      }},
+      { id: 'y', pointers: {      // this assigns the name 'foo' to the entity with the id 'b'
+        [guids.pointers.name]:{ target: 'foo', property: guids.properties.things_with_this_name },
+        [guids.pointers.named]:{ target: 'b', property: guids.properties.names }
+      }},
+      { id: 'z', pointers: {      // this assigns the name 'bar' to the entity with the id 'b'
+        [guids.pointers.name]: { target: 'bar', property: guids.properties.things_with_this_name },
+        [guids.pointers.named]: { target: 'b', property: guids.properties.names }
+      }}
     ];
     index = subject(canon)
   })

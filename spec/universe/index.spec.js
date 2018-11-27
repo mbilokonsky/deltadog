@@ -130,9 +130,9 @@ describe('createUniverse', () => {
           return acc;
         }, {})
 
-        const delta1 = { id: 'a', foo: 42, pointers: [] }
-        const delta2 = { id: 'b', foo: 31, pointers: [] }        
-        const delta3 = { id: 'c', foo: 42, pointers: [] }
+        const delta1 = { id: 'a', foo: 42, pointers: {} }
+        const delta2 = { id: 'b', foo: 31, pointers: {} }        
+        const delta3 = { id: 'c', foo: 42, pointers: {} }
         universe.appendDeltas([delta1, delta2, delta3])
         universe.addIndex(name, rule)
       })
@@ -178,21 +178,21 @@ describe('createUniverse', () => {
       // all deltas in test cases should be generated from core, really.
       beforeEach(() => {
         universe.appendDeltas([
-          { id: 'a', pointers: [] }, // will have one name
-          { id: 'b', pointers: [] }, // will have two names
-          { id: 'c', pointers: [] }, // will have no names
-          { id: 'x', pointers: [      // this assigns the name 'foo' to the entity with the id 'a'
-            { id: guids.pointers.name, target: 'foo', property: guids.properties.things_with_this_name },
-            { id: guids.pointers.named, target: 'a', property: guids.properties.names }
-          ]},
-          { id: 'y', pointers: [      // this assigns the name 'foo' to the entity with the id 'b'
-            { id: guids.pointers.name, target: 'foo', property: guids.properties.things_with_this_name },
-            { id: guids.pointers.named, target: 'b', property: guids.properties.names }
-          ]},
-          { id: 'z', pointers: [      // this assigns the name 'bar' to the entity with the id 'b'
-            { id: guids.pointers.name, target: 'bar', property: guids.properties.things_with_this_name },
-            { id: guids.pointers.named, target: 'b', property: guids.properties.names }
-          ]}
+          { id: 'a', pointers: {} }, // will have one name
+          { id: 'b', pointers: {} }, // will have two names
+          { id: 'c', pointers: {} }, // will have no names
+          { id: 'x', pointers: {      // this assigns the name 'foo' to the entity with the id 'a'
+            [guids.pointers.name]: { target: 'foo', property: guids.properties.things_with_this_name },
+            [guids.pointers.named]: { target: 'a', property: guids.properties.names }
+          }},
+          { id: 'y', pointers: {      // this assigns the name 'foo' to the entity with the id 'b'
+            [guids.pointers.name]: { target: 'foo', property: guids.properties.things_with_this_name },
+            [guids.pointers.named]: { target: 'b', property: guids.properties.names }
+          }},
+          { id: 'z', pointers: {      // this assigns the name 'bar' to the entity with the id 'b'
+            [guids.pointers.name]:  { target: 'bar', property: guids.properties.things_with_this_name },
+            [guids.pointers.named]:  { target: 'b', property: guids.properties.names }
+          }}
         ]);
       })
       

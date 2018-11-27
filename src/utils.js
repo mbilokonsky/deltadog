@@ -1,11 +1,10 @@
 const { pointers } = require("./guids");
 
 /* Predicates */
-const hasPointer = pointer_id => entity =>
-  entity.pointers.some(p => p.id === pointer_id);
+const hasPointer = pointer_id => entity => !!entity.pointers[pointer_id]  
 
 const targetsEntity = targetId => entity =>
-  entity.pointers.some(p => p.target === targetId);
+  Object.values(entity.pointers).some(p => p.target === targetId);
 
 const setsOwnership = hasPointer(pointers.commodity);
 const setsName = hasPointer(pointers.name);
